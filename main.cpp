@@ -4,7 +4,7 @@
 #include <glm/ext.hpp>
 int main()
 {
-    Window win("Window", 1280, 720);
+    Window win;
     win.Show();
     return 0;
 }

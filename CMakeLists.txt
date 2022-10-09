@@ -11,7 +11,8 @@ add_subdirectory(thirdparty/glm)
 add_subdirectory(tests/)
 
 add_executable(lab1 main.cpp Window.h Window.cpp
-    core/Vector3D.hpp core/Matrix.hpp core/MatrixTransform.hpp core/Vector4D.hpp)
+    core/Vector3D.hpp core/Matrix.hpp core/MatrixTransform.hpp core/Vector4D.hpp
+    figure.h figure.cpp)
 
 
 target_link_libraries(lab1 SDL2)

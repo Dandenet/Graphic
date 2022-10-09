@@ -4,18 +4,50 @@
 #include <string>
 #include <vector>
 #include "core/Vector3D.hpp"
-#include "core/Matrix.hpp"
-
-#include <SDL_rect.h>
+#include "figure.h"
 
 struct SDL_Window;
 struct SDL_Renderer;
-struct SDL_KeyboardEvent;
+
+
+template<typename T>
+class Node
+{
+    Node*   next;
+    T*      value;
+public:
+    Node() : next(nullptr), value(nullptr) {}
+    Node(T* value) : next(nullptr), value(value) {}
+    ~Node()
+    {
+        delete next;
+    }
+
+    T* Value()
+    {
+        return value;
+    }
+
+    const T* Value() const
+    {
+        return value;
+    }
+
+   void Append(T* element)
+   {
+       if (value)
+            next = new Node(element);
+       else
+           value = element;
+   }
+
+
+};
 
 class Window
 {
 public:
-    Window(const std::string& title, int width, int height);
+    Window();
     ~Window();
 
     void Show();
@@ -27,46 +59,17 @@ private:
     int             m_Height;
     bool            m_IsVisible;
 
-    Matrix4x4       m_TraslateMatrix;
-    Matrix4x4       m_RotationMatrix;
-    Matrix4x4       m_ScaleMatrix;
-    Matrix4x4       m_ProjectionMatrix;
+    Figure          m_Figure1;
+    Figure          m_Figure2;
 
-    unsigned int    m_PrevTicks;
-    unsigned int    m_CurTicks;
-    float           m_Speed = 0.7f;
-    float           m_RotationSpeed = 45.0f;
-
-
-    float           m_AnimRotSpeedX = 0.0f;
-    float           m_AnimRotSpeedY = 0.0f;
-    float           m_AnimRotSpeedZ = 0.0f;
-
-
-    float           m_AccelerationX = 7.0f;
-    float           m_AccelerationY = 7.0f;
-    float           m_AccelerationZ = 7.0f;
-
-    bool            m_isActiv;
-
-
-    float           m_Period = 5.0f;
-    float           m_BrakeTimer = 1.0f;
-
-    bool            isBrake = false;
-
-    std::vector<Vector3D> m_AxisX;
-    std::vector<Vector3D> m_AxisY;
-    std::vector<Vector3D> m_AxisZ;
-
-    std::vector<Vector3D> m_Points;
+    int             m_BufferSize;
+    int*            m_pFrameBuffer;
+    float*          m_pZBuffer;
+    Node<Figure>*   m_pGroups;
 
     void HandleEvents();
 
-    void KeyUpHandler(SDL_KeyboardEvent* e);
-    void Update();
-
-    SDL_Point ToWindowCoords(const Vector3D& v);
+    void FigureGroupAppend(Figure& figure);
 };
 
 #endif // WINDOW_H
