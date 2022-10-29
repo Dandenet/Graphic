@@ -2,6 +2,7 @@
 #define FIGURE_H
 
 #include <vector>
+#include <list>
 
 struct Point3D {
     int x, y, z;
@@ -16,45 +17,71 @@ struct Edge
     Point3D p2;
 };
 
+struct EdgePair
+{
+    Edge* left;
+    Edge* right;
+
+    float xl;
+    float dxl;
+    int dyl;
+
+    float xr;
+    float dxr;
+    int dyr;
+
+    float zl;
+    float dzx;
+    float dzy;
+};
+
 class Figure
 {
 public:
     Figure();
-    Figure(const std::vector<Point3D>& points);
-
-    void SetPoints(const std::vector<Point3D>& points);
-
-    void DrawOutline(SDL_Renderer* renderer);
+    Figure(int number, const std::vector<Point3D>& points);
+    ~Figure();
 
     int MaxY() const;
 
-    const std::vector<Point3D> &Points() const;
+    void Activate(int y);
 
-    size_t ScanLines() const;
 
-    const std::vector<Edge> &Edges() const;
+    int Number() const;
 
-    int getA() const;
+    int GetDy() const;
 
-    int getB() const;
-
-    int getC() const;
-
-    int getD() const;
+    const std::list<EdgePair> &ActivePairs() const;
 
 private:
 
-    std::vector<Point3D> m_Points;
+    int         m_Number;
+    int         dy;
+    int         a, b, c, d;
+    int         m_MaxY;
 
-    size_t              m_nScanLines;
-    std::vector<Edge>   m_Edges;
-    int m_MaxY;
-    int a;
-    int b;
-    int c;
-    int d;
+    Point3D*    m_pPoints;
+    size_t      m_NumPoints;
+
+    Edge*       m_pEdges;
+    size_t      m_NumEdges;
+
+    std::list<EdgePair>     m_ActivePairs;
+    std::list<Edge>         m_ActiveEdges;
+
+
+
 
     void Init();
+
+
+    inline float InterspectPoint(const Edge &edge, int y) const
+    {
+        // l(y-y0)/m + x0
+        return (edge.p2.x - edge.p1.x) * (y - edge.p1.y) /
+                static_cast<float>(edge.p2.y - edge.p1.y) +  edge.p1.x;
+    }
+
 };
 
 #endif // FIGURE_H

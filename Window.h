@@ -3,46 +3,13 @@
 
 #include <string>
 #include <vector>
-#include "core/Vector3D.hpp"
+#include <list>
+
 #include "figure.h"
 
 struct SDL_Window;
 struct SDL_Renderer;
 
-
-template<typename T>
-class Node
-{
-    Node*   next;
-    T*      value;
-public:
-    Node() : next(nullptr), value(nullptr) {}
-    Node(T* value) : next(nullptr), value(value) {}
-    ~Node()
-    {
-        delete next;
-    }
-
-    T* Value()
-    {
-        return value;
-    }
-
-    const T* Value() const
-    {
-        return value;
-    }
-
-   void Append(T* element)
-   {
-       if (value)
-            next = new Node(element);
-       else
-           value = element;
-   }
-
-
-};
 
 class Window
 {
@@ -59,13 +26,21 @@ private:
     int             m_Height;
     bool            m_IsVisible;
 
+    int             m_FrameHeight;
+
     Figure          m_Figure1;
     Figure          m_Figure2;
+    Figure          m_Figure3;
+    Figure          m_Figure4;
+    Figure          m_Figure5;
 
     int             m_BufferSize;
     int*            m_pFrameBuffer;
     float*          m_pZBuffer;
-    Node<Figure>*   m_pGroups;
+
+
+    std::vector<std::list<Figure*>>   m_Groups;
+    std::list<Figure*> m_Active;
 
     void HandleEvents();
 
